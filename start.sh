@@ -113,4 +113,4 @@ mkdir /data/logs
 
 cd /etc/openvpn
 
-openvpn --config server.conf $@
+exec openvpn --config server.conf $@
