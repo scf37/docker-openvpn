@@ -22,7 +22,7 @@ Docker image containing working OpenVPN VPN server using key authentication.
 4. `docker create --name copenvpn --restart always --privileged --net=host -v /lib/modules:/lib/modules -v /data/openvpn:/data scf37/openvpn`
 5. container will automaticall generate client config file at /data/openvpn/client.conf. Do not forget to put correct IP and optionally port in there before use.
 
-##Advanced topics
+## Advanced topics
 
 ### Configuration
 
