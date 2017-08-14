@@ -1,11 +1,11 @@
 # OpenVPN
 OpenVPN Docker image.
 
-##What is this
+## What is this
 
 Docker image containing working OpenVPN VPN server using key authentication.
 
-##Howto
+## Howto
 
 1. edit /etc/sysctl.conf:
 
@@ -24,11 +24,11 @@ Docker image containing working OpenVPN VPN server using key authentication.
 
 ##Advanced topics
 
-###Configuration
+### Configuration
 
 Container will copy default configuration to /data/conf NOT overwriting existing files. So feel free to modify configs at /data/openvpn/conf on host as you wish.
 Additional container command line parameters will be passed to openvpn binary.
 
-###Limitations
+### Limitations
 
 Not as widespread as L2TP. For example, most home routers do not have OpenVPN client.
