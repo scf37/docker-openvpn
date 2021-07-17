@@ -2,7 +2,7 @@
 
 function head {
     echo "OpenVPN VPN service"
-    echo "https://github.com/scf37/l2tp"
+    echo "https://github.com/scf37/docker-openvpn"
     echo
 }
 
@@ -30,6 +30,7 @@ fi
 
 cd /usr/share/easy-rsa
 
+cp openssl-1.0.0.cnf openssl.cnf
 source vars
 
 if [ ! -e "keys/serial" ]; then
@@ -52,6 +53,13 @@ if [ ! -e "keys/dh2048.pem" ]; then
     ./build-dh
 fi
 
+if [ ! -e "keys/ta.key" ]; then
+   openvpn --genkey tls-auth keys/ta.key
+fi
+
+chmod 600 keys/server.key
+chmod 600 keys/ta.key
+
 cp -rn keys /data/conf/etc/openvpn/keys
 
 
@@ -68,6 +76,7 @@ done
 ca_cert=`cat /data/conf/etc/openvpn/keys/ca.crt`
 client_cert=`cat /data/conf/etc/openvpn/keys/client.crt`
 client_key=`cat /data/conf/etc/openvpn/keys/client.key`
+ta_key=`cat /data/conf/etc/openvpn/keys/ta.key`
 
 if [ ! -e "/data/conf/client.ovpn" ]; then
 
@@ -80,12 +89,16 @@ proto udp
 
 remote <VPN SERVER IP HERE> <VPN SERVER PORT HERE>
 
+cipher AES-256-CBC
+
 resolv-retry infinite
 
 nobind
 
 persist-key
 persist-tun
+
+remote-cert-tls server
 
 <ca>
 ${ca_cert}
@@ -98,7 +111,11 @@ ${client_cert}
 <key>
 ${client_key}
 </key>
-comp-lzo
+
+key-direction 1
+<tls-crypt>
+${ta_key}
+</tls-crypt>
 
 # Set log file verbosity.
 verb 3
@@ -109,7 +126,7 @@ fi
 
 head
 
-mkdir /data/logs
+mkdir -p /data/logs
 
 cd /etc/openvpn
 
